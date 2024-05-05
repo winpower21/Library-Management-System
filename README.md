@@ -9,7 +9,9 @@ The user can browse the entire book catalogue hosted by the library or segregate
 
 
 ## Requirements
-All the required packages are listed in the requirements.txt file. In addtion make sure git is installed.
+1. All the required packages are listed in the requirements.txt file.
+2. Git
+3. DB Browser for SQLite
 
 
 ## Installation and running
@@ -22,3 +24,10 @@ In order to run the application on your system follow these steps: \
             ` pip install -r requirements.txt ` \
     4. Run the app: \
             ` python app.py `
+
+## Note:
+In order to access the admin backend login using the admin login form using the following default credentials:
+Email = admin@email.com
+Password = admin
+
+To create your own admin, register the admin user using the register link on the user login form, and then use DB Browser to change the user type for that user to ***admin***.
