@@ -1,0 +1,26 @@
+#canvas {
+    width: 80%;
+    margin: auto;
+    height: 800px;
+    padding: 10px;
+}
+
+#pageheader {
+    text-align: center;
+    padding-top: 20px;
+}
+
+.cab {
+    position: relative;
+    text-align: center;
+    color: white;
+    padding-bottom: 50px;
+}
+
+/* Centered text */
+.centered {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

@@ -1,0 +1,42 @@
+#canvas {
+    width: 80%;
+    margin: auto;
+    height: 800px;
+    padding: 10px;
+}
+
+#pageheader {
+    text-align: center;
+    padding-top: 20px;
+}
+
+#bookcatalogue {
+    padding-top: 50px;
+}
+
+#mybooks {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+/* Container holding the image and the text */
+.cab {
+    position: relative;
+    text-align: center;
+    color: white;
+    padding-bottom: 50px;
+}
+
+/* Centered text */
+.centered {
+    background-blend-mode: darken;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.dashopt {
+    padding: 10px;
+}
+
