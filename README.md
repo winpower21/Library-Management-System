@@ -29,4 +29,4 @@ In order to run the application on your system follow these steps: \
 In order to access the admin backend login using the admin login form using the following default credentials: \
 Email = admin@email.com \
 Password = admin \
-To create your own admin, register the admin user using the register link on the user login form, and then use DB Browser to change the user type for that user to ***admin***.
+To create your own admin, register the admin user using the register link on the user login form, and then use DB Browser to change the user type for that user to ***admin*** in the database file in the instance folder.
