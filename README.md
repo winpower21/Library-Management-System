@@ -26,8 +26,7 @@ In order to run the application on your system follow these steps: \
             ` python app.py `
 
 ## Note:
-In order to access the admin backend login using the admin login form using the following default credentials:
-Email = admin@email.com
-Password = admin
-
+In order to access the admin backend login using the admin login form using the following default credentials: \
+Email = admin@email.com \
+Password = admin \
 To create your own admin, register the admin user using the register link on the user login form, and then use DB Browser to change the user type for that user to ***admin***.
