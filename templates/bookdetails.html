@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{book.name}}</title>
+    <link rel="stylesheet" href="/static/css/dash.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body>
+    <div id="main">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/user/{{user.id}}"><img src="/static/images/liblogo.jpg" alt="Logo" width="30" height="30"
+                        class="d-inline-block align-text-top">
+                    Library
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+                      <li class="nav-item">
+                        <form class="d-flex" role="search" action="/user/{{user.id}}/search" method="POST">
+                          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+                          <button class="btn btn-outline-success" type="submit">Search</button>
+                        </form> 
+                      </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/user/{{user.id}}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/">Logout</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/user/{{user.id}}/profile">{{user.username}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div id="canvas">
+            <div class="cab">
+                <img src="/static/images/background.jpg" class="img-fluid" alt="">
+                <div class="centered">
+                    <h1 id="pageheader">Book Details</h1>
+                </div>
+            </div>
+            {% if message %}
+            <div style="color: seagreen; font-style: italic; text-align: center;"><h6>{{message}}</h6></div>
+            {% endif %}
+            <div class="container px-4">
+              <div class="row gx-5">
+                <div class="col">
+                 <div class="p-3"> <img src="/static/files/{{book.cover}}" class="card" style="max-height: 500px;"></div>
+                </div>
+                <div class="col">
+                  <div class="p-3">
+                    <h2 class="text-center">{{book.name}}</h2>
+                    <h4 class="text-center">{{book.author}}</h4>
+                    <h5>{{book.section}}</h5>
+                    <p>{{book.description}}</p>
+                    <div class="text-center">
+                        {% if book.price > 0 %}
+                        <p style="display: block; color: seagreen; font-weight: bold;">Rs.{{book.price}}</p>
+
+                        <div>
+                        <!-- Button trigger modal for purchase -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#purchaseModal">
+                          Purchase
+                        </button>
+                        <!-- Modal for purchase -->
+                        <div class="modal fade" id="purchaseModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="reviewModalLabel">Purchase <strong>{{book.name}}</strong></h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <h4 style="color: seagreen;">Price: {{book.price}}</h4><br>
+                                <form action="/user/{{user.id}}/{{book.id}}/purchase" method="POST">
+                                    <input type="submit" class="btn btn-primary" value="Confirm Purchase">
+                                </form>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {% endif %}
+                      </div>
+                        <br>
+                    
+                    
+                        <!-- Button trigger modal for request -->
+                        <div class="text-center">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rentModal">
+                          Request
+                        </button>
+                        </div>
+                        <!-- Modal for request -->
+                        <div class="modal text-center fade" id="rentModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="reviewModalLabel">Request</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <form action="/user/{{user.id}}/{{book.id}}/request" method="POST">
+                                  <label for="submit" class="form-label">Request <strong>{{book.name}}</strong></label><br>
+                                  <label for="Date" class="form-label">Select to date (optional): </label>
+                                  <input type="date" name="date"><br>
+                                  <label class="form-label">Default borrowing period is for 7 days.</label><br>
+                                  <input type="submit" class="btn btn-primary" value="Confirm Request" id="submit">
+                                </form>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <hr><br>
+                    
+                    
+                        {% if reviews|length>0 %}
+                      <h3>Reviews</h3>
+                        {% for item in reviews %}
+                        <div style="text-align: left;">
+                          {% set n=item.rating %}
+                            <ul>{% for i in range(n) %}
+                                <p style="display: inline">&#9733;</p>
+                                {% endfor %}
+                               - {{item.review}}</ul>
+                            <hr>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <div style="text-align: left;">
+                        <h6 style="text-align: left;"> There are no reviews yet.</h6>
+                    </div>
+                    {% endif %}
+                    
+                    
+                    
+                    <!-- Button trigger modal for review -->
+                    <div style="text-align: left;">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                        Submit your review
+                    </button>
+                    </div>
+                    <!-- Modal for review -->
+                    <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="reviewModalLabel">Submit review for <strong>{{book.name}}</strong></h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="/user/{{user.id}}/{{book.id}}/review" method="POST">
+                              <div class="col-auto">
+                                <label for="rating" class="form-label">Rating:</label>
+                              </div>
+                              <div class="col-auto">
+                                <select class="form-select form-select-sm" aria-label="Small select example" name="rating">
+                                  <option selected>Open this select menu</option>
+                                  <option value="1">&#9733;</option>
+                                  <option value="2">&#9733;&#9733;</option>
+                                  <option value="3">&#9733;&#9733;&#9733;</option>
+                                  <option value="4">&#9733;&#9733;&#9733;&#9733;</option>
+                                  <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
+                                </select>
+
+                              </div>
+                              <label for="review" class="form-label">Your Review:</label>
+                              <textarea class="form-control" name="review" id="review" rows="3"></textarea><br>
+                              <input type="submit" class="btn btn-primary" value="Confirm">
+                            </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+
+</html>

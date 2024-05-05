@@ -1,0 +1,28 @@
+{% extends "userprofile.html" %}
+    {% block body %}
+    <form action="/user/{{user.id}}/edit" method="POST">
+        <div>
+            <label for="name" class="col-form-label">Name</label>
+        </div>
+        <div class="col-auto">
+            <input type="text" id="name" class="form-control" value="{{user.name}}" name="name">
+        </div>
+        <div>
+            <label for="email" class="col-form-label">Change Email</label>
+        </div>
+        <div class="col-auto">
+            <input type="email" id="email" class="form-control" value="{{user.username}}" name="email">
+        </div>
+        <div>
+            <label for="pass" class="col-form-label">Change Password</label>
+        </div>
+        <div class="col-auto">
+            <input type="password" id="pass" class="form-control" value="" placeholder="Enter new password" name="password"><br>
+            <input type="password" id="pass" class="form-control" value="" placeholder="Confirm new password" name="confirm-password">
+        </div>
+        <br>
+        <div>
+            <input type="submit" class="btn btn-success" value="Confirm Changes">
+        </div>
+    </form>
+    {% endblock %}

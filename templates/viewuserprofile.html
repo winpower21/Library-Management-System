@@ -1,0 +1,20 @@
+{% extends "userprofile.html" %}
+    {% block body %}
+    <div>
+        <label for="name" class="col-form-label">Name</label>
+    </div>
+    <div class="col-auto">
+        <input type="text" id="name" class="form-control" value="{{user.name}}" readonly>
+    </div>
+    <br>
+    <div>
+        <label for="email" class="col-form-label">Email</label>
+    </div>
+    <div class="col-auto">
+        <input type="email" id="email" class="form-control" value="{{user.username}}" readonly>
+    </div>
+    <br>
+    <div>
+        <a href="/user/{{user.id}}/edit" class="btn btn-primary">Change Account Details</a>
+    </div>
+    {% endblock %}

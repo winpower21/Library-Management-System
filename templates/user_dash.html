@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="/static/css/dash.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body>
+    <div id="main">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/user/{{user.id}}"><img src="/static/images/liblogo.jpg" alt="Logo" width="30" height="30"
+                        class="d-inline-block align-text-top">
+                    Library
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                   
+                  <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+                    <li class="nav-item">
+                      <form class="d-flex" role="search" action="/user/{{user.id}}/search" method="POST">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                      </form> 
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/user/{{user.id}}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/user/{{user.id}}/bookcatalogue">Book Catalogue</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user/{{user.id}}/profile">{{user.username}}</a>
+                    </li>
+                  </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div id="canvas">
+            <div class="cab">
+                <img src="/static/images/background.jpg" class="img-fluid" alt="">
+                <div class="centered">
+                    <h1 id="pageheader">User Dashboard</h1>
+                </div>
+            </div>         
+
+            <div>
+            {% if popular_books %}
+            <div class="row">
+            <h1>Popular Books</h1>
+            {%for book in popular_books %}
+            <div class="col-sm-3">
+                <div class="card">
+                  <img src="/static/files/{{book.cover}}" class="card-img-top" style="height: 300px;">
+                  <div class="card-body">
+                    <h5 class="card-title" style="overflow:hidden; text-overflow:ellipsis; white-space: nowrap;">{{book.name}}</h5>
+                    <p class="card-text" style="overflow:hidden; text-overflow:ellipsis; white-space: nowrap;">{{book.section}}</p>
+                    <a href="/user/{{user.id}}/{{book.id}}" class="btn btn-primary">View More</a>
+                  </div>
+                </div><br>
+              </div><br>
+            {%endfor%}
+            </div>
+            {%endif%}
+            </div>
+
+            <div id="mybooks">
+                <h2>My Requests</h2>
+                {% if current_requests|length > 0 %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Book Name</th>
+                            <th scope="col">Author</th>
+                            <th scope="col">Request Date</th>
+                            <th scope="col">To Date</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for request in current_requests %}
+                        {% if request.status == "Approved" or request.status=="To be Updated" %}
+                        <tr>
+                            <td>{{request.name}}</td>
+                            <td>{{request.author}}</td>
+                            <td>{{request.from_date}}</td>
+                            <td>{{request.to_date}}</td>
+                            <td>{{request.status}}</td>
+                            {% if request.status == "Approved" %}
+                            <td><a href="/user/{{user.id}}/{{request.book_id}}/read" class="btn btn-success">Read Book</a></td>
+                            {% endif %}
+                        </tr>
+                        {% else %}
+                        <h4 style="text-align: center;">No active requests</h4>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!-- Button trigger modal for return -->
+                <div class="text-center">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#returnModal">
+                    Return Books
+                </button>
+                </div>
+                <!-- Modal for return -->
+                <div class="modal text-center fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="returnModalLabel">Return <strong></strong></h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form action="/user/{{user.id}}/return" method="POST">
+                            <div class="mb-3">
+                            <select class="form-select" aria-label="Select book to return" name="request_id" required>
+                                {% for request in current_requests %}
+                                <option value="{{request.id}}">{{request.name}}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
+                          <input type="submit" class="btn btn-warning" value="Confirm Return">
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% else %}
+                  <h4>You have not borrowed any books.</h4>
+                {% endif %}
+                <div>
+                {% if all_requests %}
+                  <a href="/user/{{user.id}}/all_requests" class="btn btn-primary">View all Requests</a>
+                {%endif%}
+              </div>
+            </div>
+
+            <div>
+                {% if purchases|length>0 %}
+                <h1>My Purchased Books</h1><br>
+                <div class="row">
+                    {% for purchase in purchases %}
+                    <div class="col-sm-3">
+                      <div class="card">
+                        <img src="/static/files/{{purchase.cover}}" class="card-img-top" style="height: 300px;">
+                        <div class="card-body">
+                          <h5 class="card-title" style="overflow:hidden; text-overflow:ellipsis; white-space: nowrap;">{{purchase.name}}</h5>
+                          <p class="card-text" style="overflow:hidden; text-overflow:ellipsis; white-space: nowrap;">{{purchase.description}}</p>
+                          <a href="/user/{{user.id}}/{{purchase.id}}/download" class="btn btn-primary">Download</a>
+                        </div>
+                      </div><br>
+                    </div><br>
+                    {% endfor %}
+                </div>
+                <a href="/user/{{user.id}}/all_purchases" class="btn btn-primary">View All Purchases ....</a>
+            {% endif %}
+            </div>
+
+
+            <div id="bookcatalogue">
+                <h2>Book Catalogue</h2>
+                <br>
+                <div class="container">
+                    {% if books|length>0 %}
+                    {% for book in books %}
+                    <div class="card mb-3" style="height: 250px;">
+                        <div class="row g-0">
+                          <div class="col-md-2" style="height: 250px; width: 160px;">
+                            <img src="/static/files/{{book.cover}}" class="img-fluid img rounded-start" style="height: 100%;">
+                          </div>
+                          <div class="col-md-10">
+                            <div class="card-body">
+                                <h3 class="card-title">{{book.name}}</h3>
+                                <h5 class="card-title">{{book.author}}</h5>
+                                <h6 class="card-title">{{book.section}}</h6>
+                                <p class="card-text" style="overflow:hidden; text-overflow:ellipsis; white-space: nowrap;">{{book.description}}</p>
+                                <td><a href="/user/{{user.id}}/{{book.id}}" type="button" class="btn btn-primary">View More</a></td>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                    <br>
+                    <a href="/user/{{user.id}}/bookcatalogue" style="text-align: center;" class="btn btn-primary">View All Books....</a>
+                    <a href="/user/{{user.id}}/sections" style="text-align: center;" class="btn btn-primary">View All Sections....</a> <br>
+                    {% else %}
+                    <h4>There are currently no books in the library.</h4>
+                    {% endif %}
+                </div>
+            </div>
+            
+        </div>
+        <br>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+
+</html>
